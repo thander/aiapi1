@@ -20,14 +20,9 @@ if ! grep -q -- "--xformers --api --nowebui" /workspace/stable-diffusion-webui/w
   sed -i 's/--xformers/--xformers --api --nowebui/' /workspace/stable-diffusion-webui/webui-user.sh;
 fi
 
-# cp -r /runpod-volume/extensions/sd-webui-animatediff /workspace/stable-diffusion-webui/extensions/;
-# cp -r /runpod-volume/extensions/sd-webui-reactor /workspace/stable-diffusion-webui/extensions/;
-# cp -r /runpod-volume/extensions/* /workspace/stable-diffusion-webui/extensions/;
 rsync -a /runpod-volume/extensions/ /workspace/stable-diffusion-webui/extensions/
-rm -rf /workspace/stable-diffusion-webui/extensions/sd-webui-controlnet
-# ln -s /runpod-volume/temporaldiff-v1-animatediff.ckpt /workspace/stable-diffusion-webui/extensions/sd-webui-animatediff/model/;
 
-ln -s /runpod-volume/models/* /workspace/stable-diffusion-webui/models/Stable-diffusion/
+ln -s /runpod-volume/models/* /workspace/stable-diffusion-webui/models/
 # ln -s /runpod-volume/cnmodels/* /workspace/stable-diffusion-webui/extensions/sd-webui-controlnet/models/
 
 if [[ $RUNPOD_STOP_AUTO ]]
