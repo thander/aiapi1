@@ -25,6 +25,7 @@ rsync -a /runpod-volume/extensions/ /workspace/stable-diffusion-webui/extensions
 ln -s /runpod-volume/models/* /workspace/stable-diffusion-webui/models/
 # ln -s /runpod-volume/cnmodels/* /workspace/stable-diffusion-webui/extensions/sd-webui-controlnet/models/
 
+
 if [[ $RUNPOD_STOP_AUTO ]]
 then
   echo \"Skipping auto-start of webui\"
