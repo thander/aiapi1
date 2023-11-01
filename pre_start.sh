@@ -22,9 +22,11 @@ fi
 
 rsync -a /runpod-volume/extensions/ /workspace/stable-diffusion-webui/extensions/
 
-ln -s /runpod-volume/models/* /workspace/stable-diffusion-webui/models/
-# ln -s /runpod-volume/cnmodels/* /workspace/stable-diffusion-webui/extensions/sd-webui-controlnet/models/
+ln -s /runpod-volume/models/Stable-diffusion/* /workspace/stable-diffusion-webui/models/Stable-diffusion/
+mkdir /workspace/stable-diffusion-webui/models/roop/
+ln -s /runpod-volume/models/roop/* /workspace/stable-diffusion-webui/models/roop/
 
+# ln -s /runpod-volume/cnmodels/* /workspace/stable-diffusion-webui/extensions/sd-webui-controlnet/models/
 
 if [[ $RUNPOD_STOP_AUTO ]]
 then
