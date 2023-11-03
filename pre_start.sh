@@ -23,6 +23,8 @@ if ! grep -q -- "--xformers --api --nowebui" /workspace/stable-diffusion-webui/w
   sed -i 's/--xformers/--xformers --api --nowebui/' /workspace/stable-diffusion-webui/webui-user.sh;
 fi
 
+# ln -sfn /a/new/path files
+
 # rsync -a /runpod-volume/extensions/ /workspace/stable-diffusion-webui/extensions/
 
 # ln -s /runpod-volume/models/Stable-diffusion/* /workspace/stable-diffusion-webui/models/Stable-diffusion/
@@ -43,7 +45,7 @@ else  echo \"Started webui through relauncher script\"
   rm -rf schemas/__pycache__
   git pull
   grep -q 'Model loaded in' <(tail -f /workspace/stable-diffusion-webui/log.log)
-  # nohup python -u handler.py &
+  nohup python -u handler.py &
 fi
 
 # wget https://civitai.com/api/download/models/130090 -O /runpod-volume/models/realisticVisionV51inpaint.safetensors;
