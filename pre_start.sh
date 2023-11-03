@@ -14,6 +14,7 @@ echo \"**** load models ****\"
 echo \"**** syncing stable diffusion to workspace, please wait ****\"
 # rsync --remove-source-files -rlptDu --ignore-existing /stable-diffusion-webui/ /workspace/stable-diffusion-webui/
 
+rm -rf /workspace/stable-diffusion-webui
 ln -s /runpod-volume/my-stable-diffusion-webui /workspace/stable-diffusion-webui
 
 echo \"**** load extensions and weights ****\"
