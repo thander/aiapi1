@@ -19,8 +19,8 @@ ln -s /runpod-volume/my-stable-diffusion-webui /workspace/stable-diffusion-webui
 
 echo \"**** load extensions and weights ****\"
 
-if ! grep -q -- "--xformers --api --nowebui" /workspace/stable-diffusion-webui/webui-user.sh; then
-  sed -i 's/--xformers/--xformers --api --nowebui/' /workspace/stable-diffusion-webui/webui-user.sh;
+if ! grep -q -- "--xformers --api --nowebui --skip-install" /workspace/stable-diffusion-webui/webui-user.sh; then
+  sed -i 's/--xformers/--xformers --api --nowebui --skip-install/' /workspace/stable-diffusion-webui/webui-user.sh;
 fi
 
 # ln -sfn /a/new/path files
