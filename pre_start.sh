@@ -22,9 +22,9 @@ fi
 
 rsync -a /runpod-volume/extensions/ /workspace/stable-diffusion-webui/extensions/
 
-ln -s /workspace/models/Stable-diffusion/* /workspace/stable-diffusion-webui/models/Stable-diffusion/
+ln -s /runpod-volume/models/Stable-diffusion/* /workspace/stable-diffusion-webui/models/Stable-diffusion/
 mkdir /workspace/stable-diffusion-webui/models/roop/
-ln -s /workspace/models/roop/* /workspace/stable-diffusion-webui/models/roop/
+ln -s /runpod-volume/models/roop/* /workspace/stable-diffusion-webui/models/roop/
 
 # ln -s /runpod-volume/cnmodels/* /workspace/stable-diffusion-webui/extensions/sd-webui-controlnet/models/
 
