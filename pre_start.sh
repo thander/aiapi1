@@ -14,17 +14,19 @@ echo \"**** load models ****\"
 echo \"**** syncing stable diffusion to workspace, please wait ****\"
 # rsync --remove-source-files -rlptDu --ignore-existing /stable-diffusion-webui/ /workspace/stable-diffusion-webui/
 
+ln -s /runpod-volume/my-stable-diffusion-webui /workspace/stable-diffusion-webui
+
 echo \"**** load extensions and weights ****\"
 
 if ! grep -q -- "--xformers --api --nowebui" /workspace/stable-diffusion-webui/webui-user.sh; then
   sed -i 's/--xformers/--xformers --api --nowebui/' /workspace/stable-diffusion-webui/webui-user.sh;
 fi
 
-rsync -a /runpod-volume/extensions/ /workspace/stable-diffusion-webui/extensions/
+# rsync -a /runpod-volume/extensions/ /workspace/stable-diffusion-webui/extensions/
 
-ln -s /runpod-volume/models/Stable-diffusion/* /workspace/stable-diffusion-webui/models/Stable-diffusion/
-mkdir /workspace/stable-diffusion-webui/models/roop/
-ln -s /runpod-volume/models/roop/* /workspace/stable-diffusion-webui/models/roop/
+# ln -s /runpod-volume/models/Stable-diffusion/* /workspace/stable-diffusion-webui/models/Stable-diffusion/
+# mkdir /workspace/stable-diffusion-webui/models/roop/
+# ln -s /runpod-volume/models/roop/* /workspace/stable-diffusion-webui/models/roop/
 
 # ln -s /runpod-volume/cnmodels/* /workspace/stable-diffusion-webui/extensions/sd-webui-controlnet/models/
 
