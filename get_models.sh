@@ -26,3 +26,8 @@ wget https://huggingface.co/ShilongLiu/GroundingDINO/resolve/main/groundingdino_
 # cd GroundingDINO
 # pip install -e .
 
+Downloading /root/.insightface/models/buffalo_l.zip from https://github.com/deepinsight/insightface/releases/download/v0.7/buffalo_l.zip...
+Downloading: "https://github.com/sczhou/CodeFormer/releases/download/v0.1.0/parsing_parsenet.pth" to /workspace/stable-diffusion-webui/repositories/CodeFormer/weights/facelib/parsing_parsenet.pth
+Downloading: "https://github.com/xinntao/facexlib/releases/download/v0.1.0/detection_Resnet50_Final.pth" to /workspace/stable-diffusion-webui/repositories/CodeFormer/weights/facelib/detection_Resnet50_Final.pth
+Downloading: "https://github.com/sczhou/CodeFormer/releases/download/v0.1.0/codeformer.pth" to /workspace/stable-diffusion-webui/models/Codeformer/codeformer-v0.1.0.pth
+Downloading: "https://github.com/cszn/KAIR/releases/download/v1.0/ESRGAN.pth" to /workspace/stable-diffusion-webui/models/ESRGAN/ESRGAN_4x.pth

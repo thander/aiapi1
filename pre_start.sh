@@ -12,7 +12,7 @@ ln -s /runpod-volume/venv /workspace/
 echo \"**** load models ****\"
 
 echo \"**** syncing stable diffusion to workspace, please wait ****\"
-rsync --remove-source-files -rlptDu --ignore-existing /stable-diffusion-webui/ /workspace/stable-diffusion-webui/
+# rsync --remove-source-files -rlptDu --ignore-existing /stable-diffusion-webui/ /workspace/stable-diffusion-webui/
 
 echo \"**** load extensions and weights ****\"
 
@@ -22,9 +22,9 @@ fi
 
 rsync -a /runpod-volume/extensions/ /workspace/stable-diffusion-webui/extensions/
 
-ln -s /runpod-volume/models/Stable-diffusion/* /workspace/stable-diffusion-webui/models/Stable-diffusion/
+ln -s /workspace/models/Stable-diffusion/* /workspace/stable-diffusion-webui/models/Stable-diffusion/
 mkdir /workspace/stable-diffusion-webui/models/roop/
-ln -s /runpod-volume/models/roop/* /workspace/stable-diffusion-webui/models/roop/
+ln -s /workspace/models/roop/* /workspace/stable-diffusion-webui/models/roop/
 
 # ln -s /runpod-volume/cnmodels/* /workspace/stable-diffusion-webui/extensions/sd-webui-controlnet/models/
 
