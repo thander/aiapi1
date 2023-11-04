@@ -5,7 +5,8 @@ API_SCHEMA = {
         'constraints': lambda method: method in [
             'GET',
             'POST',
-            'pic_replace'
+            'pic_replace',
+            'tuner_1'
         ]
     },
     'endpoint': {

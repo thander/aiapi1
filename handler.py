@@ -121,6 +121,12 @@ def pic_replace(payload):
 
   return response2
 
+def tuner_1(payload):
+  input_image = payload["alwayson_scripts"]["controlnet"]["args"][0]["input_image"]
+  payload["alwayson_scripts"]["roop"]["args"][0] = input_image
+  response = send_post_request('sdapi/v1/txt2img', payload)
+
+  return response
 
 # ---------------------------------------------------------------------------- #
 #                                RunPod Handler                                #
@@ -154,6 +160,8 @@ def handler(event):
             response = send_post_request(endpoint, payload)
         elif method == 'pic_replace':
             response = pic_replace(payload)
+        elif method == 'tuner_1':
+            response = tuner_1(payload)
 
     except Exception as e:
         logger.log(e, 'INFO')
