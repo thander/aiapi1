@@ -31,3 +31,10 @@ Downloading: "https://github.com/sczhou/CodeFormer/releases/download/v0.1.0/pars
 Downloading: "https://github.com/xinntao/facexlib/releases/download/v0.1.0/detection_Resnet50_Final.pth" to /workspace/stable-diffusion-webui/repositories/CodeFormer/weights/facelib/detection_Resnet50_Final.pth
 Downloading: "https://github.com/sczhou/CodeFormer/releases/download/v0.1.0/codeformer.pth" to /workspace/stable-diffusion-webui/models/Codeformer/codeformer-v0.1.0.pth
 Downloading: "https://github.com/cszn/KAIR/releases/download/v1.0/ESRGAN.pth" to /workspace/stable-diffusion-webui/models/ESRGAN/ESRGAN_4x.pth
+
+
+pip install insightface==0.7.3
+pip install onnx
+pip install onnxruntime-gpu>=1.16.1
+pip install opencv-python
+pip install tqdm
