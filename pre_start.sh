@@ -45,7 +45,7 @@ else  echo \"Started webui through relauncher script\"
   rm -rf schemas/__pycache__
   git pull
   grep -q 'Model loaded in' <(tail -f /workspace/stable-diffusion-webui/log.log)
-  nohup python -u handler.py &
+  # nohup python -u handler.py &
 fi
 
 # wget https://civitai.com/api/download/models/130090 -O /runpod-volume/models/realisticVisionV51inpaint.safetensors;
