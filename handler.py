@@ -169,7 +169,9 @@ def handler(event):
             'error': str(e)
         }
 
-    return response.json()
+    response_sd_api = response.json()
+
+    return {'images': [response_sd_api['images'][0]]}
 
 
 if __name__ == "__main__":
