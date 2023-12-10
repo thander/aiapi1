@@ -126,7 +126,7 @@ def tuner_1(payload):
   payload["alwayson_scripts"]["reactor"]["args"][0] = input_image
 
   if len(payload["alwayson_scripts"]["controlnet"]["args"]) > 1:
-    payload["alwayson_scripts"]["controlnet"]["args"][1] = input_image
+    payload["alwayson_scripts"]["controlnet"]["args"][1]["input_image"] = input_image
 
   response = send_post_request('sdapi/v1/txt2img', payload)
 
