@@ -9,6 +9,10 @@ API_SCHEMA = {
             'tuner_1'
         ]
     },
+    'full_r': {
+        'type': bool,
+        'required': False
+    },
     'endpoint': {
         'type': str,
         'required': True,

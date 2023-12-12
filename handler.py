@@ -171,8 +171,12 @@ def handler(event):
         }
 
     response_sd_api = response.json()
+    prop_to_check = "full_r"
 
-    return {'images': [response_sd_api['images'][0]]}
+    if prop_to_check in event['input']['api'] and event['input']['api'][prop_to_check] is True:
+        return response_sd_api
+    else:
+        return {'images': [response_sd_api['images'][0]]}
 
 
 if __name__ == "__main__":
