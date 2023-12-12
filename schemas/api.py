@@ -11,7 +11,8 @@ API_SCHEMA = {
     },
     'full_r': {
         'type': bool,
-        'required': False
+        'required': False,
+        'default': False
     },
     'endpoint': {
         'type': str,
