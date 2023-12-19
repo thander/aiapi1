@@ -1,0 +1,350 @@
+ <script src="https://cdn.tailwindcss.com"></script>
+<style>
+	body {
+		margin: 10px !important;
+	}
+	[disabled] {
+		opacity: 0.6;
+	}
+</style>
+
+<form id="form" name="form" >
+
+<div class="grid grid-cols-4 gap-4">
+	<div>
+		<label for="dropzone-file" class="block mb-2 text-sm font-medium text-gray-900">Image</label>
+		<div class="flex items-center justify-center w-full">
+	    <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-25 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+	        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+	            <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+	                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+	            </svg>
+	            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+	            <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG</p>
+	        </div>
+	        <input id="dropzone-file" type="file" name="image" class="hidden" />
+	    </label>
+		</div>
+		<img width="512" id="input_image" />
+		</div>
+		<div>
+			<label class="block mb-2 text-sm font-medium text-gray-900">Prompt</label>
+			<textarea style="height: 250px" type="text" value="" name="prompt" id="prompt" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">((solo)), ((1person)), ((half-length portrait)), ((portrait)), Speedster hero, Scarlet Speedster, lightning emblem, speed force, red suit, yellow lightning, fastest man alive, time travel, superheroic velocity, Central City, speedster heroics, kinetic energy, quick reflexes, iconic costume, cinematic portrayal, Ezra Miller's legacy, superhero with superspeed, DC Comics legend, time-bending heroics, comic book icon, ((background: city))</textarea>
+			<label class="block mb-2 text-sm font-medium text-gray-900">Negative Prompt</label>
+			<textarea style="height: 250px" type="text" value="" name="negative_prompt" id="negative_prompt" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">BadDream, (UnrealisticDream:1.3), (double characters), (mutations), (hands)</textarea>
+			<br />
+			<label class="block mb-2 text-sm font-medium text-gray-900">Steps</label>
+			<input id="steps" type="number" value="20" style="background: silver">
+			<br />
+			<label class="block mb-2 text-sm font-medium text-gray-900">cfg_scale</label>
+			<input id="cfg_scale" type="text" value="7" style="background: silver">
+			<br />
+			<input type="submit" id="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" value="Generate" />
+			<div class="timer" id="timer"></div>
+			<button id="cancel" disabled="true" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">Cancel job</button>
+		</div>
+		<div id="result">
+		</div>
+</div> 
+
+</form>
+
+<div>
+
+<script>
+	var apikey = 'UOM9JEA59ORKWATNUV7WBKZ6LVEXWITF3SLAMZA3'
+	var serverid = 'eqbmz3say4gmg4'
+  var MAX_WIDTH = 800;
+  var MAX_HEIGHT = 1024;
+
+  let item = localStorage.getItem('config') ? JSON.parse(localStorage.getItem('config')) : {}
+
+  if (item.prompt) {
+		document.querySelector('#prompt').value = item.prompt
+		document.querySelector('#negative_prompt').value = item.negative_prompt
+		document.querySelector('#steps').value = item.steps
+		document.querySelector('#cfg_scale').value = item.cfg_scale
+  }
+
+
+  function resizeImage(base64Str) {
+    var img = new Image();
+    img.src = base64Str;
+    var canvas = document.createElement('canvas');
+    var width = img.width;
+    var height = img.height;
+
+    if (width > height) {
+      if (width > MAX_WIDTH) {
+        height *= MAX_WIDTH / width;
+        width = MAX_WIDTH;
+      }
+    } else {
+      if (height > MAX_HEIGHT) {
+        width *= MAX_HEIGHT / height;
+        height = MAX_HEIGHT;
+      }
+    }
+    canvas.width = width;
+    canvas.height = height;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, width, height);
+    return canvas.toDataURL();
+  }
+
+	function getBase64(file) {
+	  return new Promise((resolve, reject) => {
+	    const reader = new FileReader();
+	    reader.readAsDataURL(file);
+	    reader.onload = () => resolve(reader.result);
+	    reader.onerror = error => reject(error);
+	  });
+	}
+
+	var fileToRead = document.getElementById("dropzone-file");
+
+	fileToRead.addEventListener("change", function(event) {
+    var files = fileToRead.files;
+    getBase64(files[0]).then(async (data) => {
+    	document.getElementById('input_image').src = data;
+    })
+
+	}, false);
+
+
+	document.querySelector('#cancel').addEventListener('click', e => {
+		const url = `https://api.runpod.ai/v2/${serverid}/cancel/${window.currentJobId}`
+		fetch(url, {
+		  method: 'post',
+		  mode: 'cors',
+		  headers: new Headers({
+		    'Content-Type': 'application/json',
+		    'Authorization': `Bearer ${apikey}`
+		  })
+		})
+		document.querySelector('#cancel').setAttribute('disabled', true)
+	})
+
+	function setToSecondsToNull() {
+		document.querySelector('#timer').innerHTML = "0"
+	}
+
+	function updateSeconds() {
+		var sec = parseFloat(document.querySelector('#timer').innerHTML)
+		sec++;
+		document.querySelector('#timer').innerHTML = sec;
+	}
+
+	function startTimer() {
+		setToSecondsToNull()
+		window.currentInterval = setInterval("updateSeconds()", 1000)
+	}
+
+	function renderImgResults(images) {
+		for (const img of images) {
+			var newimg = document.createElement('img')
+			newimg.src = `data:image/png;base64,${img}`
+			newimg.setAttribute('width', '512px')
+			document.querySelector('#result').prepend(newimg)
+		}
+	}
+
+	function checkStatus(jobId) {
+	  const url = `https://api.runpod.ai/v2/${serverid}/status/${jobId}`
+		fetch(url, {
+		  method: 'post',
+		  mode: 'cors',
+		  headers: new Headers({
+		    'Content-Type': 'application/json',
+		    'Authorization': `Bearer ${apikey}`
+		  })
+		})
+		.then(response => response.json())
+		.then(json => {
+			if (json.status.toLowerCase() === 'failed') {
+				clearInterval(window.currentInterval);
+				alert(JSON.stringify(json))
+				return
+			}
+			if (json.output) {
+				clearInterval(window.currentInterval);
+				renderImgResults(json.output.images);
+			} else {
+				setTimeout(() => { checkStatus(jobId) }, 2000);
+			}
+		})
+		.catch((e) => {
+			setTimeout(() => { checkStatus(jobId) }, 2000);
+		})
+	}
+
+	setToSecondsToNull()
+
+	document.querySelector('#form').addEventListener('submit', e => {
+		document.querySelector('#button').setAttribute('disabled', true)
+	  e.preventDefault();
+
+	  const url = `https://api.runpod.ai/v2/${serverid}/runsync`
+
+	  const dataToPost = {
+	    "input": {
+	        "api": {
+	            "method": "tuner_1",
+	            "endpoint": "/sdapi/v1/txt2img",
+	            "full_r": true
+	        },
+	        "payload": {
+	            "prompt": "",
+	            "negative_prompt": "BadDream, (UnrealisticDream:1.3), (double characters), (mutations), (hands)",
+	            "seed": -1,
+	            "subseed": -1,
+	            "subseed_strength": 0,
+	            "width": 800,
+	            "height": 1024,
+	            "sampler_name": "DPM++ 2M SDE Karras",
+	            "cfg_scale": 7,
+	            "steps": 35,
+	            "batch_size": 1,
+	            "restore_faces": false,
+	            "face_restoration_model": null,
+	            "sd_model_name": "absolutereality",
+	            "sd_vae_name": null,
+	            "sd_vae_hash": null,
+	            "seed_resize_from_w": -1,
+	            "seed_resize_from_h": -1,
+	            "denoising_strength": null,
+	            "index_of_first_image": 0,
+	            "styles": [],
+	            "clip_skip": 1,
+	            "is_using_inpainting_conditioning": false,
+	            "alwayson_scripts": {
+	                "controlnet": {
+	                    "args": [
+	                        {
+	                            "input_image": "",
+	                            "module": "ip-adapter_clip_sd15",
+	                            "model": "ip-adapter-plus-face_sd15 [71693645]",
+	                            "weight": 0.8,
+	                            "resize_mode": 0,
+	                            "lowvram": false,
+	                            "processor_res": 512,
+	                            "guidance_end": 1,
+	                            "pixel_perfect": false,
+	                            "control_mode": 2
+	                        }
+	                    ]
+	                },
+	                "reactor":{
+		                  "args":[
+		                  	"",             
+		                    true,
+				                "0",
+				                "0",
+				                "inswapper_128.onnx",
+				                "CodeFormer",
+				                1, 
+				                true,
+				                "None",
+				                2,
+				                1,
+				                false,
+				                true,
+				                "Minimum",
+				                "No",
+				                "No",
+				                false,
+				                1,
+				                true,
+				                false,
+				                "CUDA",
+				                true
+				            ]
+	                }
+	            }
+	        }
+		   }
+		}
+
+
+    // img_base64, #0
+    // True, #1 Enable ReActor
+    // '0', #2 Comma separated face number(s) from swap-source image
+    // '0', #3 Comma separated face number(s) for target image (result)
+    // 'C:\stable-diffusion-webui\models\insightface\inswapper_128.onnx', #4 model path
+    // 'CodeFormer', #4 Restore Face: None; CodeFormer; GFPGAN
+    // 1, #5 Restore visibility value
+    // True, #7 Restore face -> Upscale
+    // '4x_NMKD-Superscale-SP_178000_G', #8 Upscaler (type 'None' if doesn't need), see full list here: http://127.0.0.1:7860/sdapi/v1/script-info -> reactor -> sec.8
+    // 2, #9 Upscaler scale value
+    // 1, #10 Upscaler visibility (if scale = 1)
+    // False, #11 Swap in source image
+    // True, #12 Swap in generated image
+    // 1, #13 Console Log Level (0 - min, 1 - med or 2 - max)
+    // 0, #14 Gender Detection (Source) (0 - No, 1 - Female Only, 2 - Male Only)
+    // 0, #15 Gender Detection (Target) (0 - No, 1 - Female Only, 2 - Male Only)
+    // False, #16 Save the original image(s) made before swapping
+    // 0.8, #17 CodeFormer Weight (0 = maximum effect, 1 = minimum effect), 0.5 - by default
+    // False, #18 Source Image Hash Check, True - by default
+    // False, #19 Target Image Hash Check, False - by default
+    // "CUDA", #20 CPU or CUDA (if you have it), CPU - by default
+    // True, #21 Face Mask Correction
+    // 1, #22 Select Source, 0 - Image, 1 - Face Model, 2 - Source Folder
+    // "elena.safetensors", #23 Filename of the face model (from "models/reactor/faces"), e.g. elena.safetensors, don't forger to set #22 to 1
+    // "C:\PATH_TO_FACES_IMAGES", #24 The path to the folder containing source faces images, don't forger to set #22 to 2
+
+		startTimer()
+
+		var file = document.querySelector('#dropzone-file').files[0];
+
+		getBase64(file).then(async (data) => {
+			let img = resizeImage(data)
+
+			// set values from html inputs
+
+			dataToPost.input.payload.alwayson_scripts.controlnet.args[0].input_image = img?.b64 || data;
+			dataToPost.input.payload.prompt = document.querySelector('#prompt').value
+			dataToPost.input.payload.negative_prompt = document.querySelector('#negative_prompt').value
+			dataToPost.input.payload.steps = parseFloat(document.querySelector('#steps').value)
+			dataToPost.input.payload.cfg_scale = parseFloat(document.querySelector('#cfg_scale').value)
+
+			let config = {
+				prompt: dataToPost.input.payload.prompt,
+				negative_prompt: dataToPost.input.payload.negative_prompt,
+				steps: dataToPost.input.payload.steps,
+				cfg_scale: dataToPost.input.payload.cfg_scale
+			}
+			localStorage.setItem('config', JSON.stringify(config))
+			
+			fetch(url, {
+			  method: 'post',
+			  body: JSON.stringify(dataToPost),
+			  mode: 'cors',
+			  headers: new Headers({
+			    'Content-Type': 'application/json',
+			    'Authorization': `Bearer ${apikey}`
+			  })
+			})
+			.then(response => response.json())
+			.then(json => {
+				document.querySelector('#button').removeAttribute('disabled')
+				window.currentJobId = json.id
+				console.log(json)
+				if (json.output) {
+					clearInterval(window.currentInterval);
+					renderImgResults(json.output.images);
+					document.querySelector('#cancel').removeAttribute('disabled')
+				} else {
+					document.querySelector('#cancel').removeAttribute('disabled')
+					checkStatus(json.id)
+				}
+			})
+			.catch((e) => {
+
+				console.error(e);
+				setToSecondsToNull();
+			})
+		});
+	});
+
+
+</script>

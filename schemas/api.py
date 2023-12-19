@@ -9,6 +9,11 @@ API_SCHEMA = {
             'tuner_1'
         ]
     },
+    'model': {
+      'type': str,
+      'required': False,
+      'default': 'absolutereality'
+    },
     'full_r': {
         'type': bool,
         'required': False,

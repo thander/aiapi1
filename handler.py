@@ -121,7 +121,8 @@ def pic_replace(payload):
 
   return response2
 
-def tuner_1(payload):
+def tuner_1(payload, model):
+  response_change_model = send_post_request('sdapi/v1/options', {"sd_model_checkpoint": model})
   input_image = payload["alwayson_scripts"]["controlnet"]["args"][0]["input_image"]
   payload["alwayson_scripts"]["reactor"]["args"][0] = input_image
 
@@ -162,7 +163,7 @@ def handler(event):
         elif method == 'pic_replace':
             response = pic_replace(payload)
         elif method == 'tuner_1':
-            response = tuner_1(payload)
+            response = tuner_1(payload, validated_api['validated_input']['model'])
 
     except Exception as e:
         logger.log(e, 'INFO')
