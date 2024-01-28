@@ -46,9 +46,7 @@
 		<div id="result">
 		</div>
 </div> 
-
 </form>
-
 <div>
 
 <script>
@@ -110,7 +108,6 @@
     })
 
 	}, false);
-
 
 	document.querySelector('#cancel').addEventListener('click', e => {
 		const url = `https://api.runpod.ai/v2/${serverid}/cancel/${window.currentJobId}`
@@ -190,8 +187,7 @@
 	    "input": {
 	        "api": {
 	            "method": "tuner_1",
-	            "endpoint": "/sdapi/v1/txt2img",
-	            "full_r": true
+	            "endpoint": "/sdapi/v1/txt2img"
 	        },
 	        "payload": {
 	            "prompt": "",
@@ -203,7 +199,7 @@
 	            "height": 1024,
 	            "sampler_name": "DPM++ 2M SDE Karras",
 	            "cfg_scale": 7,
-	            "steps": 35,
+	            "steps": 25,
 	            "batch_size": 1,
 	            "restore_faces": false,
 	            "face_restoration_model": null,
@@ -215,7 +211,7 @@
 	            "denoising_strength": null,
 	            "index_of_first_image": 0,
 	            "styles": [],
-	            "clip_skip": 1,
+	            "clip_skip": 2,
 	            "is_using_inpainting_conditioning": false,
 	            "alwayson_scripts": {
 	                "controlnet": {
@@ -224,7 +220,7 @@
 	                            "input_image": "",
 	                            "module": "ip-adapter_clip_sd15",
 	                            "model": "ip-adapter-plus-face_sd15 [71693645]",
-	                            "weight": 0.8,
+	                            "weight": 1,
 	                            "resize_mode": 0,
 	                            "lowvram": false,
 	                            "processor_res": 512,
@@ -244,8 +240,8 @@
 				                "CodeFormer",
 				                1, 
 				                true,
-				                "None",
-				                2,
+				                "R-ESRGAN 4x+",
+				                1.28,
 				                1,
 				                false,
 				                true,
